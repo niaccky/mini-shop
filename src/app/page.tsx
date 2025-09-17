@@ -71,16 +71,16 @@ export default function Home() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="flex items-center space-x-2">
-                <Package className="w-8 h-8 text-blue-600" />
-                <h1 className="text-2xl font-bold text-gray-900">立信超市</h1>
+                <Package className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">立信超市</h1>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Link
                 href="/admin"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium"
+                className="bg-blue-600 text-white px-2 py-1 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 text-xs sm:text-sm font-medium"
               >
                 管理后台
               </Link>
@@ -125,9 +125,9 @@ export default function Home() {
             </div>
 
             {/* 排序和视图控制 */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">排序:</span>
+                <span className="text-sm text-gray-500 hidden sm:inline">排序:</span>
                 <select
                   value={`${sortBy}-${sortOrder}`}
                   onChange={(e) => {
@@ -135,7 +135,7 @@ export default function Home() {
                     setSortBy(field as 'name' | 'price' | 'category');
                     setSortOrder(order as 'asc' | 'desc');
                   }}
-                  className="px-3 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="px-2 py-1 sm:px-3 sm:py-1 border border-gray-300 rounded text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="name-asc">名称 A-Z</option>
                   <option value="name-desc">名称 Z-A</option>
@@ -148,15 +148,15 @@ export default function Home() {
               <div className="flex items-center border border-gray-300 rounded-lg">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                  className={`p-1.5 sm:p-2 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                 >
-                  <Grid className="w-4 h-4" />
+                  <Grid className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                  className={`p-1.5 sm:p-2 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                 >
-                  <List className="w-4 h-4" />
+                  <List className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
@@ -228,42 +228,42 @@ function ProductCard({ product }: { product: Product }) {
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="h-48 w-full object-cover object-center"
+            className="h-40 sm:h-48 w-full object-cover object-center"
           />
         ) : (
-          <div className="h-48 w-full flex items-center justify-center bg-gray-100">
-            <Package className="h-12 w-12 text-gray-400" />
+          <div className="h-40 sm:h-48 w-full flex items-center justify-center bg-gray-100">
+            <Package className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400" />
           </div>
         )}
       </div>
       
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-medium text-gray-900 line-clamp-2">{product.name}</h3>
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 ml-2 flex-shrink-0">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900 line-clamp-2 pr-2">{product.name}</h3>
+          <span className="inline-flex items-center px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 flex-shrink-0">
             {product.category}
           </span>
         </div>
         
         {product.description && (
-          <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
+          <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 line-clamp-2">{product.description}</p>
         )}
         
-        <div className="flex justify-between items-center mb-3">
-          <div className="text-2xl font-bold text-blue-600">
+        <div className="flex justify-between items-center mb-2 sm:mb-3">
+          <div className="text-lg sm:text-2xl font-bold text-blue-600">
             {formatPrice(product.price)}
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-xs sm:text-sm text-gray-500">
             库存: {product.stock}
           </div>
         </div>
         
-        <div className="text-xs text-gray-400 font-mono mb-3">
+        <div className="text-xs text-gray-400 font-mono mb-2 sm:mb-3 truncate">
           GTIN: {product.gtin}
         </div>
         
         <button
-          className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+          className={`w-full py-2 px-3 sm:px-4 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
             product.stock > 0
               ? 'bg-blue-600 text-white hover:bg-blue-700'
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -271,8 +271,8 @@ function ProductCard({ product }: { product: Product }) {
           disabled={product.stock === 0}
         >
           {product.stock > 0 ? (
-            <div className="flex items-center justify-center space-x-2">
-              <ShoppingCart className="w-4 h-4" />
+            <div className="flex items-center justify-center space-x-1 sm:space-x-2">
+              <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>加入购物车</span>
             </div>
           ) : (
@@ -287,51 +287,51 @@ function ProductCard({ product }: { product: Product }) {
 // 商品列表项组件
 function ProductListItem({ product }: { product: Product }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow duration-200">
-      <div className="flex items-center space-x-6">
-        <div className="flex-shrink-0">
+    <div className="bg-white rounded-lg shadow-sm border p-3 sm:p-6 hover:shadow-md transition-shadow duration-200">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
+        <div className="flex-shrink-0 w-full sm:w-auto">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="h-20 w-20 object-cover rounded-lg"
+              className="h-32 w-full sm:h-20 sm:w-20 object-cover rounded-lg"
             />
           ) : (
-            <div className="h-20 w-20 bg-gray-100 rounded-lg flex items-center justify-center">
-              <Package className="h-8 w-8 text-gray-400" />
+            <div className="h-32 w-full sm:h-20 sm:w-20 bg-gray-100 rounded-lg flex items-center justify-center">
+              <Package className="h-12 w-12 sm:h-8 sm:w-8 text-gray-400" />
             </div>
           )}
         </div>
         
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-3 sm:space-y-0">
             <div className="flex-1">
-              <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
+              <h3 className="text-base sm:text-lg font-medium text-gray-900">{product.name}</h3>
               {product.description && (
-                <p className="text-sm text-gray-500 mt-1">{product.description}</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{product.description}</p>
               )}
-              <div className="flex items-center space-x-4 mt-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2">
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   {product.category}
                 </span>
-                <span className="text-xs text-gray-400 font-mono">
+                <span className="text-xs text-gray-400 font-mono truncate">
                   GTIN: {product.gtin}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-xs sm:text-sm text-gray-500">
                   库存: {product.stock}
                 </span>
               </div>
             </div>
             
-            <div className="flex items-center space-x-4 ml-6">
-              <div className="text-right">
-                <div className="text-2xl font-bold text-blue-600">
+            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start space-x-3 sm:space-x-0 sm:space-y-2 sm:ml-6">
+              <div className="text-left sm:text-right">
+                <div className="text-lg sm:text-2xl font-bold text-blue-600">
                   {formatPrice(product.price)}
                 </div>
               </div>
               
               <button
-                className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                className={`py-2 px-3 sm:px-4 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   product.stock > 0
                     ? 'bg-blue-600 text-white hover:bg-blue-700'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -339,8 +339,8 @@ function ProductListItem({ product }: { product: Product }) {
                 disabled={product.stock === 0}
               >
                 {product.stock > 0 ? (
-                  <div className="flex items-center space-x-2">
-                    <ShoppingCart className="w-4 h-4" />
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>加入购物车</span>
                   </div>
                 ) : (

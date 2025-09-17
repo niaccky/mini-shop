@@ -244,63 +244,66 @@ export default function AdminPage() {
       )}
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">商品管理系统</h1>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowDataManagement(!showDataManagement)}
-              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-            >
-              <Database size={20} />
-              数据管理
-            </button>
-            <button
-              onClick={() => {
-                setEditingProduct(null);
-                setShowProductForm(true);
-              }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-            >
-              <Plus size={20} />
-              添加商品
-            </button>
-            <button
-              onClick={() => {
-                setEditingCategory(null);
-                setShowCategoryForm(true);
-              }}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-            >
-              <Plus size={20} />
-              添加分类
-            </button>
+        {/* 头部操作栏 */}
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">商品管理</h1>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+              <button
+                onClick={() => setShowDataManagement(!showDataManagement)}
+                className="bg-gray-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <Database size={16} className="sm:w-5 sm:h-5" />
+                数据管理
+              </button>
+              <button
+                onClick={() => {
+                  setEditingProduct(null);
+                  setShowProductForm(true);
+                }}
+                className="bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <Plus size={16} className="sm:w-5 sm:h-5" />
+                添加商品
+              </button>
+              <button
+                onClick={() => {
+                  setEditingCategory(null);
+                  setShowCategoryForm(true);
+                }}
+                className="bg-green-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <Plus size={16} className="sm:w-5 sm:h-5" />
+                添加分类
+              </button>
+            </div>
           </div>
         </div>
 
         {/* 数据管理面板 */}
         {showDataManagement && (
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Database size={24} />
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Database size={20} className="sm:w-6 sm:h-6" />
               数据管理
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               <button
                 onClick={handleExportData}
-                className="flex items-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                <Download size={20} className="text-blue-600" />
+                <Download size={18} className="text-blue-600 sm:w-5 sm:h-5 flex-shrink-0" />
                 <div className="text-left">
-                  <div className="font-medium">导出数据</div>
-                  <div className="text-sm text-gray-500">备份所有商品和分类数据</div>
+                  <div className="font-medium text-sm sm:text-base">导出数据</div>
+                  <div className="text-xs sm:text-sm text-gray-500">备份所有商品和分类数据</div>
                 </div>
               </button>
               
-              <label className="flex items-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                <Upload size={20} className="text-green-600" />
+              <label className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                <Upload size={18} className="text-green-600 sm:w-5 sm:h-5 flex-shrink-0" />
                 <div className="text-left">
-                  <div className="font-medium">导入数据</div>
-                  <div className="text-sm text-gray-500">从备份文件恢复数据</div>
+                  <div className="font-medium text-sm sm:text-base">导入数据</div>
+                  <div className="text-xs sm:text-sm text-gray-500">从备份文件恢复数据</div>
                 </div>
                 <input
                   type="file"
@@ -312,12 +315,12 @@ export default function AdminPage() {
               
               <button
                 onClick={handleClearData}
-                className="flex items-center gap-2 p-4 border border-red-300 rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-red-300 rounded-lg hover:bg-red-50 transition-colors text-red-600 sm:col-span-2 lg:col-span-1"
               >
-                <Trash2 size={20} />
+                <Trash2 size={18} className="sm:w-5 sm:h-5 flex-shrink-0" />
                 <div className="text-left">
-                  <div className="font-medium">清空数据</div>
-                  <div className="text-sm text-red-500">删除所有商品和分类</div>
+                  <div className="font-medium text-sm sm:text-base">清空数据</div>
+                  <div className="text-xs sm:text-sm text-red-500">删除所有商品和分类</div>
                 </div>
               </button>
             </div>
@@ -325,24 +328,24 @@ export default function AdminPage() {
         )}
 
         {/* 搜索和筛选 */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex gap-4 items-center">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
                 placeholder="搜索商品名称或GTIN..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               />
             </div>
-            <div className="flex items-center gap-2">
-              <Filter size={20} className="text-gray-400" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Filter size={18} className="text-gray-400 sm:w-5 sm:h-5" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base min-w-0 flex-1 sm:flex-none"
               >
                 <option value="all">所有分类</option>
                 {categories.map((category) => (
@@ -357,9 +360,9 @@ export default function AdminPage() {
 
         {/* 商品列表 */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-              <Package size={24} />
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <Package size={20} className="sm:w-6 sm:h-6" />
               商品管理 ({filteredProducts.length})
             </h2>
           </div>
@@ -367,67 +370,74 @@ export default function AdminPage() {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">图片</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">商品信息</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GTIN</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">分类</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">价格</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">库存</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">图片</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">商品信息</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GTIN</th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">分类</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">价格</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">库存</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex-shrink-0 h-12 w-12">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                      <div className="flex-shrink-0 h-10 w-10 sm:h-12 sm:w-12">
                         {product.imageUrl ? (
                           <img
                             src={product.imageUrl}
                             alt={product.name}
-                            className="h-12 w-12 object-cover rounded-lg"
+                            className="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-lg"
                           />
                         ) : (
-                          <div className="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                            <Package className="h-6 w-6 text-gray-400" />
+                          <div className="h-10 w-10 sm:h-12 sm:w-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <Package className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" />
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                        <div className="text-sm text-gray-500">{product.description}</div>
+                        <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-32 sm:max-w-none">{product.name}</div>
+                        <div className="text-xs text-gray-500 truncate max-w-32 sm:max-w-none sm:whitespace-nowrap">{product.description}</div>
+                        <div className="sm:hidden text-xs text-gray-500 font-mono mt-1">{product.gtin}</div>
+                        <div className="md:hidden text-xs text-gray-500 mt-1">{getCategoryName(product.categoryId)}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
+                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
                       {product.gtin}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {getCategoryName(product.categoryId)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatPrice(product.price)}
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm text-gray-900 font-medium">
+                        {formatPrice(product.price)}
+                      </div>
+                      <div className="sm:hidden text-xs text-gray-500 mt-1">
+                        库存: {product.stock}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {product.stock}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex gap-2">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex gap-1 sm:gap-2">
                         <button
                           onClick={() => {
                             setEditingProduct(product);
                             setShowProductForm(true);
                           }}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-blue-600 hover:text-blue-900 p-1"
                         >
-                          <Edit size={16} />
+                          <Edit size={14} className="sm:w-4 sm:h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(product.id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 p-1"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} className="sm:w-4 sm:h-4" />
                         </button>
                       </div>
                     </td>
@@ -440,37 +450,37 @@ export default function AdminPage() {
 
         {/* 分类管理 */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-              <Tag size={24} />
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <Tag size={20} className="sm:w-6 sm:h-6" />
               分类管理 ({categories.length})
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-4 sm:p-6">
             {categories.map((category) => (
-              <div key={category.id} className="border border-gray-200 rounded-lg p-4">
+              <div key={category.id} className="border border-gray-200 rounded-lg p-3 sm:p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-gray-900">{category.name}</h3>
-                  <div className="flex gap-1">
+                  <h3 className="font-medium text-gray-900 text-sm sm:text-base truncate pr-2">{category.name}</h3>
+                  <div className="flex gap-1 flex-shrink-0">
                     <button
                       onClick={() => {
                         setEditingCategory(category);
                         setShowCategoryForm(true);
                       }}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-blue-600 hover:text-blue-900 p-1"
                     >
-                      <Edit size={16} />
+                      <Edit size={14} className="sm:w-4 sm:h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteCategory(category.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 hover:text-red-900 p-1"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={14} className="sm:w-4 sm:h-4" />
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">{category.description}</p>
-                <div className="mt-2 text-xs text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-600 mb-2 line-clamp-2">{category.description}</p>
+                <div className="text-xs text-gray-500">
                   商品数量: {products.filter(p => p.categoryId === category.id).length}
                 </div>
               </div>
