@@ -4,7 +4,28 @@ import React, { useState, useEffect } from 'react';
 import { Product, Category, ProductFormData, CategoryFormData } from '@/types/product';
 import { productApi, categoryApi } from '@/lib/api';
 import { validateGTIN, validateGTINDetailed, formatGTIN, formatPrice } from '@/lib/utils';
-import { Plus, Edit, Trash2, Search, Filter, Package, Tag, AlertCircle, CheckCircle, X, Save, Download, Upload, Database } from 'lucide-react';
+import { 
+  Plus, 
+  Edit, 
+  Trash2, 
+  Search, 
+  Filter, 
+  Package, 
+  Tag, 
+  AlertCircle, 
+  CheckCircle, 
+  X, 
+  Save, 
+  Download, 
+  Upload, 
+  Database,
+  ArrowLeft,
+  TrendingUp,
+  Users,
+  Settings,
+  Eye
+} from 'lucide-react';
+import Link from 'next/link'
 
 // 通知组件
 const Notification = ({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) => (
@@ -225,15 +246,19 @@ export default function AdminPage() {
     return matchesSearch && matchesCategory;
   });
 
-
-
   const getCategoryName = (categoryId: string) => {
     const category = categories.find(c => c.id === categoryId);
     return category ? category.name : '未知分类';
   };
 
+  // 统计数据
+  const totalProducts = products.length;
+  const totalCategories = categories.length;
+  const lowStockProducts = products.filter(p => p.stock <= 10).length;
+  const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* 通知 */}
       {notification && (
         <Notification
@@ -243,46 +268,139 @@ export default function AdminPage() {
         />
       )}
 
-      <div className="container mx-auto px-4 py-8">
-        {/* 头部操作栏 */}
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 mb-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
-                <Package className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">商品管理</h1>
-                <p className="text-sm text-gray-600 mt-1">管理您的商品库存和分类</p>
+      {/* 顶部导航栏 */}
+      <div className="bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-lg sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+                  <ArrowLeft className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors duration-200">返回商店</span>
+              </Link>
+              
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg">
+                  <Settings className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    管理控制台
+                  </h1>
+                  <p className="text-sm text-gray-500">商品与分类管理</p>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-xl">
+                  <Package className="w-4 h-4 text-blue-600" />
+                  <span className="text-blue-700 font-medium">{totalProducts} 商品</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-xl">
+                  <Tag className="w-4 h-4 text-purple-600" />
+                  <span className="text-purple-700 font-medium">{totalCategories} 分类</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl">
+                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <span className="text-green-700 font-medium">{formatPrice(totalValue)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* 统计卡片 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">总商品数</p>
+                <p className="text-2xl font-bold text-gray-900">{totalProducts}</p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                <Package className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">分类数量</p>
+                <p className="text-2xl font-bold text-gray-900">{totalCategories}</p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                <Tag className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">低库存商品</p>
+                <p className="text-2xl font-bold text-red-600">{lowStockProducts}</p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg">
+                <AlertCircle className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">库存总价值</p>
+                <p className="text-2xl font-bold text-green-600">{formatPrice(totalValue)}</p>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 操作按钮区域 */}
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="flex items-center gap-4">
+              <h2 className="text-lg font-bold text-gray-900">快速操作</h2>
+            </div>
+            
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setShowDataManagement(!showDataManagement)}
-                className="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-4 py-2.5 rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 flex items-center justify-center gap-2 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="group bg-gradient-to-r from-slate-600 to-slate-700 text-white px-6 py-3 rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-300 flex items-center gap-3 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                <Database size={16} className="sm:w-5 sm:h-5" />
-                数据管理
+                <Database size={18} />
+                <span>数据管理</span>
               </button>
+              
               <button
                 onClick={() => {
                   setEditingProduct(null);
                   setShowProductForm(true);
                 }}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center justify-center gap-2 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 flex items-center gap-3 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                <Plus size={16} className="sm:w-5 sm:h-5" />
-                添加商品
+                <Plus size={18} />
+                <span>添加商品</span>
               </button>
+              
               <button
                 onClick={() => {
                   setEditingCategory(null);
                   setShowCategoryForm(true);
                 }}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2.5 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 flex items-center justify-center gap-2 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="group bg-gradient-to-r from-emerald-600 to-green-600 text-white px-6 py-3 rounded-xl hover:from-emerald-700 hover:to-green-700 transition-all duration-300 flex items-center gap-3 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                <Plus size={16} className="sm:w-5 sm:h-5" />
-                添加分类
+                <Plus size={18} />
+                <span>添加分类</span>
               </button>
             </div>
           </div>
@@ -290,34 +408,40 @@ export default function AdminPage() {
 
         {/* 数据管理面板 */}
         {showDataManagement && (
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 mb-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg">
-                <Database size={20} className="text-white sm:w-6 sm:h-6" />
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 p-6 mb-8 animate-in slide-in-from-top-5 duration-300">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg">
+                <Database size={24} className="text-white" />
               </div>
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">数据管理</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  数据管理
+                </h2>
+                <p className="text-sm text-gray-600">导入、导出和管理您的数据</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <button
                 onClick={handleExportData}
-                className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border border-white/30 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                className="group flex items-center gap-4 p-6 border-2 border-blue-200 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                  <Download size={18} className="text-white sm:w-5 sm:h-5 flex-shrink-0" />
+                <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                  <Download size={20} className="text-white" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-blue-700 transition-colors duration-200">导出数据</div>
-                  <div className="text-xs sm:text-sm text-gray-500 group-hover:text-blue-600 transition-colors duration-200">备份所有商品和分类数据</div>
+                  <div className="font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">导出数据</div>
+                  <div className="text-sm text-gray-600 group-hover:text-blue-600 transition-colors duration-200">备份所有商品和分类数据</div>
                 </div>
               </button>
               
-              <label className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border border-white/30 rounded-2xl hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg cursor-pointer">
-                <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                  <Upload size={18} className="text-white sm:w-5 sm:h-5 flex-shrink-0" />
+              <label className="group flex items-center gap-4 p-6 border-2 border-green-200 rounded-2xl hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:border-green-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg cursor-pointer">
+                <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                  <Upload size={20} className="text-white" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-green-700 transition-colors duration-200">导入数据</div>
-                  <div className="text-xs sm:text-sm text-gray-500 group-hover:text-green-600 transition-colors duration-200">从备份文件恢复数据</div>
+                  <div className="font-bold text-gray-900 group-hover:text-green-700 transition-colors duration-200">导入数据</div>
+                  <div className="text-sm text-gray-600 group-hover:text-green-600 transition-colors duration-200">从备份文件恢复数据</div>
                 </div>
                 <input
                   type="file"
@@ -329,14 +453,14 @@ export default function AdminPage() {
               
               <button
                 onClick={handleClearData}
-                className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border border-red-200 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-red-600 sm:col-span-2 lg:col-span-1"
+                className="group flex items-center gap-4 p-6 border-2 border-red-200 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:border-red-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
-                <div className="p-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                  <Trash2 size={18} className="text-white sm:w-5 sm:h-5 flex-shrink-0" />
+                <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                  <Trash2 size={20} className="text-white" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-sm sm:text-base text-red-700 group-hover:text-red-800 transition-colors duration-200">清空数据</div>
-                  <div className="text-xs sm:text-sm text-red-500 group-hover:text-red-600 transition-colors duration-200">删除所有商品和分类</div>
+                  <div className="font-bold text-red-700 group-hover:text-red-800 transition-colors duration-200">清空数据</div>
+                  <div className="text-sm text-red-600 group-hover:text-red-700 transition-colors duration-200">删除所有商品和分类</div>
                 </div>
               </button>
             </div>
@@ -344,28 +468,29 @@ export default function AdminPage() {
         )}
 
         {/* 搜索和筛选 */}
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-stretch sm:items-center">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-6 items-stretch lg:items-center">
             <div className="flex-1 relative">
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 p-1 bg-blue-100 rounded-lg">
-                <Search className="text-blue-600" size={16} />
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-blue-100 rounded-xl">
+                <Search className="text-blue-600" size={18} />
               </div>
               <input
                 type="text"
                 placeholder="搜索商品名称或GTIN..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-0 bg-white/80 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200 text-sm sm:text-base shadow-md"
+                className="w-full pl-16 pr-6 py-4 border-0 bg-white/80 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200 text-base shadow-md placeholder-gray-500"
               />
             </div>
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl shadow-lg">
-                <Filter size={16} className="text-white sm:w-5 sm:h-5" />
+            
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl shadow-lg">
+                <Filter size={18} className="text-white" />
               </div>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border-0 bg-white/80 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200 text-sm sm:text-base min-w-0 flex-1 sm:flex-none shadow-md font-medium"
+                className="px-6 py-4 border-0 bg-white/80 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200 text-base min-w-48 shadow-md font-medium"
               >
                 <option value="all">所有分类</option>
                 {categories.map((category) => (
@@ -380,71 +505,95 @@ export default function AdminPage() {
 
         {/* 商品列表 */}
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 overflow-hidden mb-8">
-          <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-white/20 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
-                <Package size={20} className="text-white sm:w-6 sm:h-6" />
+          <div className="px-6 py-5 border-b border-white/20 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
+                  <Package size={24} className="text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    商品管理
+                  </h2>
+                  <p className="text-sm text-gray-600">共 {filteredProducts.length} 件商品</p>
+                </div>
               </div>
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                商品管理 ({filteredProducts.length})
-              </span>
-            </h2>
+              
+              {lowStockProducts > 0 && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-xl">
+                  <AlertCircle size={16} />
+                  <span className="text-sm font-medium">{lowStockProducts} 件商品库存不足</span>
+                </div>
+              )}
+            </div>
           </div>
+          
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gradient-to-r from-gray-50 to-blue-50">
                 <tr>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">图片</th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">商品信息</th>
-                  <th className="hidden sm:table-cell px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">GTIN</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">商品</th>
+                  <th className="hidden lg:table-cell px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">GTIN</th>
                   <th className="hidden md:table-cell px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">分类</th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">价格</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">价格</th>
                   <th className="hidden sm:table-cell px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">库存</th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">操作</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">操作</th>
                 </tr>
               </thead>
               <tbody className="bg-white/50 divide-y divide-gray-200/50">
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-white/80 transition-colors duration-200">
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                      <div className="flex-shrink-0 h-10 w-10 sm:h-12 sm:w-12">
-                        {product.imageUrl ? (
-                          <img
-                            src={product.imageUrl}
-                            alt={product.name}
-                            className="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 sm:h-12 sm:w-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center shadow-md">
-                            <Package className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
+                  <tr key={product.id} className="hover:bg-white/80 transition-all duration-200 group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 h-16 w-16">
+                          {product.imageUrl ? (
+                            <img
+                              src={product.imageUrl}
+                              alt={product.name}
+                              className="h-16 w-16 object-cover rounded-xl shadow-md group-hover:shadow-lg transition-shadow duration-200"
+                            />
+                          ) : (
+                            <div className="h-16 w-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center shadow-md">
+                              <Package className="h-8 w-8 text-gray-500" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-bold text-gray-900 truncate group-hover:text-blue-600 transition-colors duration-200">
+                            {product.name}
                           </div>
-                        )}
+                          <div className="text-sm text-gray-600 truncate mt-1">
+                            {product.description}
+                          </div>
+                          <div className="lg:hidden text-xs text-gray-500 font-mono mt-2 bg-gray-100 px-3 py-1 rounded-lg inline-block">
+                            {product.gtin}
+                          </div>
+                          <div className="md:hidden text-xs text-blue-600 mt-2 bg-blue-50 px-3 py-1 rounded-lg inline-block font-medium">
+                            {getCategoryName(product.categoryId)}
+                          </div>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4">
-                      <div>
-                        <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate max-w-32 sm:max-w-none">{product.name}</div>
-                        <div className="text-xs text-gray-600 truncate max-w-32 sm:max-w-none sm:whitespace-nowrap">{product.description}</div>
-                        <div className="sm:hidden text-xs text-gray-500 font-mono mt-1 bg-gray-100 px-2 py-1 rounded-md inline-block">{product.gtin}</div>
-                        <div className="md:hidden text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md inline-block font-medium">{getCategoryName(product.categoryId)}</div>
-                      </div>
+                    <td className="hidden lg:table-cell px-6 py-4">
+                      <span className="text-sm text-gray-900 font-mono bg-gray-50 px-3 py-2 rounded-lg">
+                        {product.gtin}
+                      </span>
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono bg-gray-50 rounded-lg mx-2">
-                      {product.gtin}
+                    <td className="hidden md:table-cell px-6 py-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                        {getCategoryName(product.categoryId)}
+                      </span>
                     </td>
-                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">
-                      <span className="bg-blue-50 px-3 py-1 rounded-full text-xs">{getCategoryName(product.categoryId)}</span>
-                    </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                      <div className="text-xs sm:text-sm text-gray-900 font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    <td className="px-6 py-4">
+                      <div className="text-lg font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                         {formatPrice(product.price)}
                       </div>
                       <div className="sm:hidden text-xs text-gray-600 mt-1 bg-gray-100 px-2 py-1 rounded-md inline-block">
                         库存: {product.stock}
                       </div>
                     </td>
-                    <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm font-semibold">
-                      <span className={`px-3 py-1 rounded-full text-xs ${
+                    <td className="hidden sm:table-cell px-6 py-4">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
                         product.stock > 10 
                           ? 'bg-green-100 text-green-800' 
                           : product.stock > 0 
@@ -454,22 +603,24 @@ export default function AdminPage() {
                         {product.stock}
                       </span>
                     </td>
-                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex gap-1 sm:gap-2">
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
                         <button
                           onClick={() => {
                             setEditingProduct(product);
                             setShowProductForm(true);
                           }}
-                          className="p-2 text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                          className="p-3 text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                          title="编辑商品"
                         >
-                          <Edit size={14} className="sm:w-4 sm:h-4" />
+                          <Edit size={16} />
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(product.id)}
-                          className="p-2 text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                          className="p-3 text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                          title="删除商品"
                         >
-                          <Trash2 size={14} className="sm:w-4 sm:h-4" />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </td>
@@ -482,21 +633,27 @@ export default function AdminPage() {
 
         {/* 分类管理 */}
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 overflow-hidden">
-          <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-white/20 bg-gradient-to-r from-purple-50 to-pink-50">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg">
-                <Tag size={20} className="text-white sm:w-6 sm:h-6" />
+          <div className="px-6 py-5 border-b border-white/20 bg-gradient-to-r from-purple-50 to-pink-50">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg">
+                <Tag size={24} className="text-white" />
               </div>
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                分类管理 ({categories.length})
-              </span>
-            </h2>
+              <div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  分类管理
+                </h2>
+                <p className="text-sm text-gray-600">共 {categories.length} 个分类</p>
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
             {categories.map((category) => (
-              <div key={category.id} className="group bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-gray-900 text-sm sm:text-base truncate pr-2 group-hover:text-purple-600 transition-colors duration-200">{category.name}</h3>
+              <div key={category.id} className="group bg-white/90 backdrop-blur-md border-2 border-white/30 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:border-purple-200">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-bold text-gray-900 text-lg truncate pr-2 group-hover:text-purple-600 transition-colors duration-200">
+                    {category.name}
+                  </h3>
                   <div className="flex gap-2 flex-shrink-0">
                     <button
                       onClick={() => {
@@ -504,20 +661,32 @@ export default function AdminPage() {
                         setShowCategoryForm(true);
                       }}
                       className="p-2 text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                      title="编辑分类"
                     >
-                      <Edit size={14} className="sm:w-4 sm:h-4" />
+                      <Edit size={16} />
                     </button>
                     <button
                       onClick={() => handleDeleteCategory(category.id)}
                       className="p-2 text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                      title="删除分类"
                     >
-                      <Trash2 size={14} className="sm:w-4 sm:h-4" />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-700 mb-3 line-clamp-2 leading-relaxed">{category.description}</p>
-                <div className="text-xs text-gray-600 bg-gray-50 px-3 py-2 rounded-lg font-medium">
-                  商品数量: <span className="text-purple-600 font-bold">{products.filter(p => p.categoryId === category.id).length}</span>
+                
+                <p className="text-sm text-gray-700 mb-4 line-clamp-3 leading-relaxed">
+                  {category.description}
+                </p>
+                
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg font-medium">
+                    商品数量: <span className="text-purple-600 font-bold">{products.filter(p => p.categoryId === category.id).length}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Eye size={14} />
+                    <span>查看详情</span>
+                  </div>
                 </div>
               </div>
             ))}

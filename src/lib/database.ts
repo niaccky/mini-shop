@@ -124,7 +124,7 @@ export class ProductDatabase {
 
   static async updateProduct(id: string, updates: Partial<ProductFormData>): Promise<Product | null> {
     try {
-      let updateData: any = {
+      const updateData: Partial<ProductFormData> & { updatedAt: Date; category?: string } = {
         ...updates,
         updatedAt: new Date(),
       };
